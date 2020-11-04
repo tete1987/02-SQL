@@ -1,0 +1,40 @@
+一、数据库搭建与使用
+（一）数据库搭建
+1. 进入官网的下载页，http://dev,mysql.com/downloads/mysql/  （Windows版）
+将页面拉到最下方
+
+2.其中的不含有debug 的版本是比较适合服务器搭建的，另外一个含有debug版本的是包含有一些测试套件的，不太需要。
+3.将下载好的文件解压，此文件只需要解压无需安装
+
+4.自己在mysql 解压的目录下手动创建 “data”文件夹，和一个 my.ini 文件
+
+
+5.配置环境变量
+
+6.以管理员身份打开cmd，跳转到mysql路径下的bin目录下：
+
+7.执行初始化命令：完成后会生成一个临时密码，需要牢牢记住临时密码
+初始化命令：mysqld --initialize --user=mysql --console
+
+8.然后将MySQL添加到服务：输入mysqld -install 进行服务的添加
+9.启动服务：输入net start mysql 启动服务
+10.登录mysql：输入 mysql -u -root -p 进行登录数据库，这时提示需要密码，使用上面产生的临时密码登录
+
+（二）客户端使用
+以Navicat为例
+1.连接到mysql服务端
+1）当Navicat连接数据库报错时，可使用以下方法：
+
+2.新建数据库
+直接在Navicat中点击右键，新建数据库操作即可。新建数据库之后，有默认的四个表是不可删除的，
+information_schema,mysql,perfor,anc_schema,sys等。
+
+
+3.命令行界面
+在Navicat中点击右键，选择“命令行界面“功能，可写sql语句。
+
+
+4.sql文件导入
+在Navicat中点击右键，选择“运行SQL文件“功能，可导入sql文件。
+5.sql文件导出
+在Navicat中点击右键，选择“导出SQL文件“功能，可导出sql文件。
