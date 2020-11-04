@@ -1,0 +1,98 @@
+三、数据库结构解析
+（一）mysql 表结构定义
+1.创建表
+CRAETE TABLE `表名`(
+    `id` int(11)  unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+    `name` varchar(100) DEFAULT NULL COMMENT '名称',
+    PRIMARY KEY(`id`)  USING BTREE 
+)  ENGINE=InnoDB AUTO_INCREMENT=8  DEFAULT CHARSET=utf8  
+ROW_FORMAT=DYNAMIC COMMENT='表注释'
+
+注解：
+unsigned：无符号。例如像负数一类的数字是包含符号的，无符号说明不包含此类数据。
+NOT NULL：不可为空。
+AUTO_INCREMENT=8 ：意味默认从8开始自增。如果去掉该值，默认从0开始。
+COMMENT：注释。
+DEFAULT NULL：默认为空。
+
+2.删除表：drop table 表名
+3.常用的语法格式如下：
+ALTER TABLE <表名>  [修改选项]
+修改选项的语法格式如下：
+1）添加字段：ADD COLUMN  <列名>  <类型>
+2）改变字段名：CHANGE COLUMN <旧列名>  <新列类型>
+3）修改字段类型 MODIFY COLUMN <列名>  <类型>
+4）删除字段 DROP COLUMN <列名>
+5）修改表名 RENAME TO <新表名>
+
+（二）数据库的基本增删改查
+1.插入一条数据
+   intert into 表名（字段名1，字段名2） values (字段值1，字段值2)
+2.删除一条数据
+   delete from 表名 where 字段名1=字段值1
+   delete from  表名  删除表里所有数据
+3.查询数据
+   select * from 表名
+4.更新数据
+   update 表名 set 字段名1=字段值1  where 字段名2=字段值2
+   update 表名 set 字段名1=字段值1  修改表里所有数据
+
+练习：
+1）基本查询：select * from table_name
+2）字段查询：select fileds from table_name
+3）条件查询：select * from table_name where a=1\
+4）排序：select * from table_name order by b desc(或 asc)
+5）分页：select * from table_name order limit 10 offset 0
+6）去重：select distinct gender from employees
+
+实战：
+1）查询薪水前100
+select * from salaries order by DESC limit 100;
+
+5.常用关系符：
+1）比较： 等于=    大于>    小于<    不等于<>
+2）通配：where CustomerName Like  ‘%or%’
+3）范围限定：where price BETWEEN 10 and 20 
+4）子集限定：where country IN （‘Germany’，‘France’，‘UK’）
+5）逻辑关系：and or  not
+6）基本语法：group by 字段  having 条件
+7）常用函数：COUNT   MAX  MIN  SUM  AVG 
+示例：
+select count (gender) ,gender from employees group by gender;
+select count(gender),gender from employees group by having gender='F'
+
+
+实战：
+select avg(s.salary) from (select salary from salaries order by salary DESC limit 100) as s;(查询前100的平均薪水)
+select count(*),dept_no from dept_manager group by dept_no having count(*) >3
+
+6.join 表练习
+
+1）左连接查询 left join：
+select * from a_table a LEFT JOIN b_table b on a.a_id=b.b_id ;
+
+注解：
+left join 是left outer join  的简写，它的全称是左外连接，是外连接的一种。左连接，左表（a_table）的记录将会全部显示出来，而右表（b_table）只会显示符合搜索条件的记录。右表记录不足的地方均显示为null
+
+2）右连接查询 right  join ：
+select * from a_table a RIGHT JOIN  b_table b on a.a_id=b.b_id;
+
+注解：
+right join 是right outer join的简写，它的全称是右外连接，是外连接中的一种。与左连接相反，右连接，左表（a_table）只会显示符合搜索条件的记录，而右表（b_table） 的记录将会全部显示出来。左表记录不足的地方均为NULL
+
+3）内连接查询 inner join
+select * from a_table a INNER JOIN b_table b on a.a_id=b.b_id;
+
+注解：
+组合两个表中的记录，返回关联字段相符的记录，也就是返回两个表的交集部分。
+
+实战：
+select a.id ,a.name from j_course a LEFT JOIN  j_chapters b on a.id=b.course_id;
+
+
+SELECT j_course.id aid,j_course.name ,j_chapters.name bname from j_course RIGHT JOIN j_chapters ON j_course.id=j_chapters.course_id;
+
+
+SELECT j_course.id aid,j_course.name ,j_chapters.name bname from j_course INNER JOIN j_chapters ON j_course.id=j_chapters.course_id;
+
+
