@@ -1,0 +1,99 @@
+六、Neo4j数据库
+（一）Neo4j简介
+
+1.定义：
+Neo4j是一个高性能的，NoSQL图形数据库，它将结构化数据存储在网络上而不是表中。
+2.特点：
+非关系型数据库
+NoSQL
+CQL
+遵循SQL语法，简单，且人性化
+3.下载：https://neo4j.com/download-center/#community
+
+（二）Neo4j安装与使用
+1.下载与使用：
+   1）运行Neo4j：neo4j console
+
+   2）输入默认账号密码： neo4j
+在网页中输入启动的地址，输入默认的账号和密码
+   3）修改账号密码
+第一次登录会提示修改密码
+
+（三）基础命令
+1.创建节点
+1）创建标签节点
+打开浏览器
+创建emp节点，标签为Employee
+create(emp:Employee)
+
+
+
+创建xiaohong节点，带有属性
+create(xiaohong:People{no:1,age:10,gender:"M"})
+
+
+
+2）创建带有属性的节点
+create(book:Book{title:"book1",pages:340,price:234})
+
+
+3）添加属性
+match(book{title:"book1"})
+set book.name="hello"
+return book
+
+
+2.查询
+1）检索节点的age属性
+match与return要一起使用
+match(xiaohong:people)
+return xiaohong.age
+
+
+3.关系
+1）创建关系
+create(p1:Profile1)-[r1:LIKES]->(p2:Profile2)
+
+
+
+2）为已有的节点创建关系：
+match (a{name:"xiaohong"}),(b{name:"linmei"})
+create (a)-[r1:friends]->(b)
+
+
+4.删除节点和关系
+1）删除相应属性下的节点
+match(e:People) 
+delete e
+
+2)删除带有关系的节点：
+match(cc:Profile)-[Friends]->(c:Profile2)
+delete cc,c,Friends
+
+
+
+3)删除属性
+match (book{title:"book1"})
+remove book.price
+return book
+
+
+5.delete 与remove
+1）delete操作用于删除节点和关联关系
+2）remove操作用于删除标签和属性
+
+6.额外补充1
+1）删除标签：
+match(m:Move)
+remove m:Pictrue
+
+2）排序：
+match(emp:Employee)
+return emp.empid,emp.name,emp.salary,emp.deptno
+order by emp.name desc
+
+3）更高级的查询：
+match(emp:Employee)
+where emp.name='ABC'
+return emp
+
