@@ -1,0 +1,160 @@
+五、MongoDB数据库
+（一）关系型数据库
+
+上图中的关系：
+1）书与读者  多对多
+2）书与作者  一对多
+3）书对出版日期   一对一
+以上类似每张表之间都有关系的数据库类型均为关系型数据库，常用的有MySQL、Oracle、Sqlserver数据库、Access……等等。
+使用的语句均为SQL（结构化查询语言）
+
+1.关系型数据库存在的问题
+1）存储在硬盘上，读写慢
+2）保持ACID，难扩展
+
+（二）非关系型数据库
+1.优点
+1）NoSql（Not Only SQL）
+2）key：value
+3）CAP->BASE
+Consistency（C）：一致性，所有节点在同一时间具有相同的数据
+Availability（A）：可用性，保证每个请求不管成功或者失败都会有响应
+Partition tolerance：分隔容忍，系统中任意信息的丢失或失败不会影响系统的继续运作
+注：同一时间以上3个不能同时使用，只能两两组合。
+2.缺点：
+1）没有标准化
+2）有限的查询功能（到目前为止）
+
+（三）MongoDB
+1.特点
+1）非关系型数据库（NoSQL）
+2）文档存储：类json格式
+3）有机会对字段建立索引，实现关系数据库
+2.下载与安装：
+http://www.mongodb.com/download-center/community
+3.配置数据库目录
+1）运行MongoDB服务器
+mongod -dbpath  xxxx
+2）连接MongoDB 
+mongo
+3）删除数据库
+查看当前数据库：show dbs
+切换数据库：use demo1
+往数据库中插入一条数据：db.demo1.insert({"name":"xiaohong"})
+删除数据库：db.dropDatabase()
+4.什么是集合
+集合相当于一张表
+集合可以有多个文档
+5.创建/查看/删除集合
+1）创建集合：db.createCollection('collection1')
+2）查看已经创建的集合:show collection
+3）删除集合:db.collection1.drop()
+
+示例：
+db.createCollection("col1")  (创建集合)
+show collections (查看已创建的集合)
+db.col1.drop  （删除集合）
+
+
+6.插入文档
+文档是MongoDB中的基本单元
+相当于一条记录
+以json格式显示
+1）插入/查看文档
+插入文档是，MongoDB自动创建集合：
+db.collectionsDemo.insert({"name":"hello"})
+
+查看插入的内容
+db.collectionsDemo.find().pretty()
+
+
+2）插入复杂文档
+声明变量，插入文档
+document=({
+title:'MongoDB',
+  by:'RoutongYu',
+  tags:['mongodb','database','NoSQL'],    
+});
+
+db.collectionsDemo.insert(document)
+
+
+示例如下：
+
+
+操作 格式 范例 RDBMS中的类似语句
+等于 {<key>:<value>} db.col.find({"by":"2"}).prrtty() where by='2'
+小于 {<key>:{$lt:<value>}} db.col.find({"likes":{$lt:50}}).pretty() where likes < 50
+小于或等于 {<key>:{$lte:<value>}} db.col.find({"likes":{$lte:50}}).pretty() where likes <= 50
+大于 {<key>:{$gt:<value>}} db.col.find({"likes":{$gt:50}}).pretty() where likes > 50
+大于或等于 {<key>:{$gte<value>}} db.col.find({"likes":{$gte:50}}).pretty() where likes >= 50
+不等于 {<key>:{$ne:<value>}} db.col.find({"likes":{$ne:50}}).pretty() where likes != 50
+
+7.修改和删除文档
+1）修改的语句格式：
+db.collection.update(
+    <query>,
+    <update>,
+    {
+        upsert:<boolean>,
+        multi:<boolean>,
+        writeConcern:<document>
+    }
+)
+
+可选选项：
+upsert：如果不存在update的记录，是否插入，默认false
+multi：把按条数查出来的多条记录全部更新，默认false
+writeConcern：抛出异常的级别
+注：update是替换，没有修改的字段会消失！
+
+示例：
+1）修改文档：
+db.col.update({'title':'Mongodb'},{'title':'Mongodb123'}) 
+
+注：如果有多个相同的字段，则只修改匹配到的第一个值
+2）修改多个文档
+db.col.update({'name':'hello'},{$set:{'name':'hello123'}},{multi:true})
+
+3)删除多个文档
+db.col.remove({'name':'hello123'})
+
+4)删除一个文档
+db.col.remove({'name':'hello123'},1)
+
+
+8.修改操作符
+如果想要用update做更新的操作，后面必须添加操作符。
+1）$inc
+用法：{$inc:{field:value}}
+作用：对一个数字字段的某个field增加value
+示例：将name为xiaohong 的学生的age 增加5
+db.students.update({name:"xiaohong"},{$inc:{age:5}})
+
+
+2)$set
+用法：{$set:{field:value}}
+作用：把文档中某个字段field 的值设为value
+示例：
+db.students.update({name:"xiaohong"},{$set:{age:10}})
+
+
+3）$unset
+用法：{$unset:{field:1}}
+作用：删除某个字段field
+示例：将chenzhou的年龄字段删除
+db.students.update({name:"chenzhou"},{$unset:{age:1}})
+
+
+4)$push
+用法：{$push:{field:value}}
+作用：把value追加到field里。注：field只能是数组类型，如果field不存在，会自动插入一个数字类型。
+示例：给chenzhou添加别名“micheal”
+db.students.update({name:"chenzhou"},{$push:{"ailis":"Micheal"}})
+
+
+5)$rename
+用法：{$rename:{old_field_name:new_field_name}}
+作用：对字段进行重命名
+示例：把xiaohong记录的name字段重命名为hello
+db.students.update({name:"xiaohong"},{$rename:{"xiaohong":"hello"}})
